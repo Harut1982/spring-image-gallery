@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>adminPage</title>
+</head>
+<body>
+<a href="/logout" >Logout</a>
+
+<h3 th:text="${msg}" th:if="${msg!=null}"></h3><br>
+<h3>Add Category:</h3><br>
+<form action="/addCategory" method="post" enctype="multipart/form-data" >
+    <input type="text" name="name" placeholder="Please input name"><br>
+    <input type="text" name="title" placeholder="Please input title"><br>
+    <textarea  name="description" placeholder="Please input description"></textarea><br>
+    <input type="file" name="image" ><br>
+    <input type="submit" value="add">
+</form><br>
+<h3>Add Image:</h3><br>
+<form action="/addImage" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Please input name"><br>
+    <input type="file" name="image" ><br>
+    <select name="category.id">
+        <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+    <input type="submit" value="add">
+</form>
+</body>
+</html>
