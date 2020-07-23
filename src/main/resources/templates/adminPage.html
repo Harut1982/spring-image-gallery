@@ -7,7 +7,7 @@
 <body>
 <a href="/logout" >Logout</a>
 
-<h3 th:text="${msg}" th:if="${msg!=null}"></h3><br>
+<h3 th:text="${msg}" th:if="${msg!=null}" style="color: green"></h3><br>
 <h3>Add Category:</h3><br>
 <form action="/addCategory" method="post" enctype="multipart/form-data" >
     <input type="text" name="name" placeholder="Please input name"><br>

@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -34,39 +35,35 @@ public class MainController {
 
 
     @GetMapping("/")
-    public String adminPage( ModelMap modelMap){
+    public String homePage(ModelMap modelMap) {
 
         List<Category> categories = categoryRepository.findAll();
         List<Image> images = imageRepository.findAll();
-        modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("images",images);
+        modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("images", images);
 
         return "index";
     }
 
     @GetMapping("/adminPage")
-    public String homePage( ModelMap modelMap,@RequestParam (name="msg",required = false,defaultValue = "Welcome Admin Page") String msg){//deletic u addic ekac message @ndunelu hamar kgrenq @RequestParam(name="msg",required = false)
+    public String adminPage(ModelMap modelMap, @RequestParam(name = "msg", required = false, defaultValue = "Welcome Admin Page") String msg) {//deletic u addic ekac message @ndunelu hamar kgrenq @RequestParam(name="msg",required = false)
 
         List<Category> categories = categoryRepository.findAll();
         List<Image> images = imageRepository.findAll();
-        modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("msg",msg);
-        modelMap.addAttribute("images",images);
+        modelMap.addAttribute("categories", categories);
+        modelMap.addAttribute("msg", msg);
+        modelMap.addAttribute("images", images);
 
         return "adminPage";
-    }
-    @GetMapping("/about")
-    public String aboutUsPage(){
-        return "/about";
     }
 
 
 
 
     @PostMapping("/addCategory")
-    public String addCategory(@ModelAttribute Category category, @RequestParam ("image")MultipartFile file) throws IOException {
-        String name=System.currentTimeMillis()+"_"+file.getOriginalFilename();
-        File image=new File(uploadDir,name);
+    public String addCategory(@ModelAttribute Category category, @RequestParam("image") MultipartFile file) throws IOException {
+        String name = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File image = new File(uploadDir, name);
         category.setPicUrl(name);
         file.transferTo(image);
         categoryRepository.save(category);
@@ -74,25 +71,29 @@ public class MainController {
         return "redirect:/adminPage?msg=Category was added";
 
     }
+
     @PostMapping("/addImage")
     public String addImage(@ModelAttribute Image image, @RequestParam("image") MultipartFile file) throws IOException {
 
-        String imagename=System.currentTimeMillis()+"_"+file.getOriginalFilename();
-        File images=new File(uploadDir,imagename);
+        String imagename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        File images = new File(uploadDir, imagename);
         image.setPicUrl(imagename);
         file.transferTo(images);
+        image.setUploadDate(LocalDateTime.now());
         imageRepository.save(image);
 
 
         return "redirect:/adminPage?msg=Image was added Successfully";
     }
+
     @GetMapping(
-            value="/image",
+            value = "/image",
             produces = MediaType.IMAGE_JPEG_VALUE
     )
-    @ResponseBody byte[] getImage(@RequestParam("name") String imageName) throws IOException {
-        InputStream in=new FileInputStream(uploadDir+File.separator+imageName);
-             return IOUtils.toByteArray(in);
+    @ResponseBody
+    byte[] getImage(@RequestParam("name") String imageName) throws IOException {
+        InputStream in = new FileInputStream(uploadDir + File.separator + imageName);
+        return IOUtils.toByteArray(in);
 
     }
 

@@ -19,7 +19,7 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class ImageController {
-    @Value("${file.upload.dir}")
+
 
 
 
